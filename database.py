@@ -11,7 +11,32 @@ data on NEOs and close approaches extracted by `extract.load_neos` and
 
 You'll edit this file in Tasks 2 and 3.
 """
-
+"""
+A function will be made which makes it possible to link together the neos and 
+close approaches which we have been provided through the load_neos and load_approaches.
+The parameters will be the neos and approaches itself. 
+This is our helper function for linking which we will use for the other functions in database.py as well. 
+"""
+def link_neos_and_approaches(neos, approaches):
+    neosList = {}           #for the neos list
+    approachesList = []     #for the approaches list
+    
+    for approach in approaches:
+        for neo in neos:
+            if neo.designation == approach._designation:       #every close approach has attributes with designation
+                approach.neo = neo                             #and so does every neo. We'll check if they match, then it
+                if neo.designation in neosList:              #will be linked. Also, it will searched as well in the list
+                    neosList[neo.designation].approaches.append(approach)   #we are making. If it is already there, the 
+                else:                                                   #approach will be appended to the neosList in the
+                    neo.approaches.append(approach)                 #approches. Else, it will be given with a new neo. 
+                    neosList[neo.designation] = neo
+                break
+        approachesList.append(approach)
+    for neo in neos:
+        if neo.designation not in neosList:
+            neosList[neo.designation] = neo
+            
+    return (neosList.values(), approachesList)
 class NEODatabase:
     """A database of near-Earth objects and their close approaches.
 
