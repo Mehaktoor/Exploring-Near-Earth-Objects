@@ -71,6 +71,45 @@ class AttributeFilter:
     def __repr__(self):
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
+"""
+Now we will create filters for all the filters - Distance, Date, Velocity, Diameter and Hazardous. 
+"""
+class filterDate(AttributeFilter):
+    #this is a subclass of AttributeFilter class 
+    @classmethod
+    def get(cls, approach):
+        #this will override its superclass's get function. 
+        return approach.time.date()
+    
+class filterDistance(AttributeFilter):
+    #this is a subclass of AttributeFilter class 
+    @classmethod
+    def get(cls, approach):
+        #this will override its superclass's get function. 
+        return approach.distance
+
+class filterVelocity(AttributeFilter):
+    #this is a subclass of AttributeFilter class 
+    @classmethod
+    def get(cls, approach):
+        #this will override its superclass's get function. 
+        return approach.velocity
+    
+class filterDiameter(AttributeFilter):
+    #this is a subclass of AttributeFilter class 
+    @classmethod
+    def get(cls, approach):
+        #this will override its superclass's get function. This is NearEarthObject's instance - hence
+        #neo
+        return approach.neo.diameter
+    
+class filterHazardous(AttributeFilter):
+    #this is a subclass of AttributeFilter class 
+    @classmethod
+    def get(cls, approach):
+        #this will override its superclass's get function. This is NearEarthObject's instance - hence
+        #neo
+        return approach.neo.hazardous
 
 def create_filters(date=None, start_date=None, end_date=None,
                    distance_min=None, distance_max=None,
@@ -107,7 +146,28 @@ def create_filters(date=None, start_date=None, end_date=None,
     :return: A collection of filters for use with `query`.
     """
     # TODO: Decide how you will represent your filters.
-    return ()
+    filter_list = []
+    if (date):
+        filter_list.append(filterDate(operator.eq, date))
+    if (start_date):
+        filter_list.append(filterDate(operator.ge, start_date))
+    if (end_date):
+        filter_list.append(filterDate(operator.le, end_date))
+    if (distance_min):
+        filter_list.append(filterDistance(operator.ge, distance_min))
+    if (distance_max):
+        filter_list.append(filterDistance(operator.le, distance_max))
+    if (velocity_min):
+        filter_list.append(filterVelocity(operator.ge, velocity_min))
+    if (velocity_max):
+        filter_list.append(filterVelocity(operator.le, velocity_max))
+    if (diameter_min):
+        filter_list.append(filterDiameter(operator.ge, diameter_min))
+    if (diameter_max):
+        filter_list.append(filterDiameter(operator.le, diameter_max))
+    if(hazardous != None):
+        filter_list.append(filterHazardous(operator.eq, hazardous))
+    return filter_list
 
 
 def limit(iterator, n=None):
@@ -120,4 +180,13 @@ def limit(iterator, n=None):
     :yield: The first (at most) `n` values from the iterator.
     """
     # TODO: Produce at most `n` values from the given iterator.
-    return iterator
+    if n == 0 and n == None:
+        return [approach for approach in iterator]
+    else:
+        approaches = []
+        for index, approach in enumerate(iterator):
+            if index > n:
+                break
+            approaches.append(approach)
+        return approaches
+ 

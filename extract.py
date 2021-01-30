@@ -32,7 +32,7 @@ def load_neos(neo_csv_path):
             diameterVal = float('nan')
             nameVal = None
             if(n['diameter'] != '' and n['diameter'] != None):      #checking for the value of diameter
-                diameterVal = float(n['dimeter'])
+                diameterVal = float(n['diameter'])
             if(n['name'] != '' and n['name'] != None):      #checking for value of name
                 nameVal = n['name']
             result.append(NearEarthObject(

@@ -20,15 +20,15 @@ This is our helper function for linking which we will use for the other function
 def link_neos_and_approaches(neos, approaches):
     neosList = {}           #for the neos list
     approachesList = []     #for the approaches list
-    
+    #every close approach has attributes with designation and so does every neo. We'll check if they match,     #then it will be linked. Also, it will searched as well in the list we are making. If it is already         #there, the approach will be appended to the neosList in the approches. Else, it will be given with a       #new neo. 
     for approach in approaches:
         for neo in neos:
-            if neo.designation == approach._designation:       #every close approach has attributes with designation
-                approach.neo = neo                             #and so does every neo. We'll check if they match, then it
-                if neo.designation in neosList:              #will be linked. Also, it will searched as well in the list
-                    neosList[neo.designation].approaches.append(approach)   #we are making. If it is already there, the 
-                else:                                                   #approach will be appended to the neosList in the
-                    neo.approaches.append(approach)                 #approches. Else, it will be given with a new neo. 
+            if neo.designation == approach._designation:       
+                approach.neo = neo                             
+                if neo.designation in neosList:             
+                    neosList[neo.designation].approaches.append(approach)   
+                else:                                                   
+                    neo.approaches.append(approach)                          
                     neosList[neo.designation] = neo
                 break
         approachesList.append(approach)
@@ -37,6 +37,7 @@ def link_neos_and_approaches(neos, approaches):
             neosList[neo.designation] = neo
             
     return (neosList.values(), approachesList)
+
 class NEODatabase:
     """A database of near-Earth objects and their close approaches.
 
@@ -62,12 +63,19 @@ class NEODatabase:
         :param neos: A collection of `NearEarthObject`s.
         :param approaches: A collection of `CloseApproach`es.
         """
-        self._neos = neos
-        self._approaches = approaches
+        self.neos_name = {}
+        self.neos_designation = {}
+        #this will save the values securely
+        self._neos, self._approaches = link_neos_and_approaches(neos, approaches)       
+        # TODO: What additional auxiliary data structures will be useful? -- dictionaries will be very 
+        #helpful!
 
-        # TODO: What additional auxiliary data structures will be useful?
-
-        # TODO: Link together the NEOs and their close approaches.
+        # TODO: Link together the NEOs and their close approaches -- This will be done through the 
+        # link_neos_approaches function -- 
+        for neo in self._neos:
+            if neo.name:
+                self.neos_name[neo.name] = neo
+            self.neos_designation[neo.designation] = neo
 
     def get_neo_by_designation(self, designation):
         """Find and return an NEO by its primary designation.
@@ -83,6 +91,8 @@ class NEODatabase:
         :return: The `NearEarthObject` with the desired primary designation, or `None`.
         """
         # TODO: Fetch an NEO by its primary designation.
+        if designation in self.neos_designation:
+            return self.neos_designation[designation]
         return None
 
     def get_neo_by_name(self, name):
@@ -100,6 +110,8 @@ class NEODatabase:
         :return: The `NearEarthObject` with the desired name, or `None`.
         """
         # TODO: Fetch an NEO by its name.
+        if name in self.neos_name:
+            return self.neos_name[name]
         return None
 
     def query(self, filters=()):
@@ -111,11 +123,14 @@ class NEODatabase:
         If no arguments are provided, generate all known close approaches.
 
         The `CloseApproach` objects are generated in internal order, which isn't
-        guaranteed to be sorted meaninfully, although is often sorted by time.
+        guaranteed to be sorted meaningfully, although is often sorted by time.
 
         :param filters: A collection of filters capturing user-specified criteria.
         :return: A stream of matching `CloseApproach` objects.
         """
         # TODO: Generate `CloseApproach` objects that match all of the filters.
         for approach in self._approaches:
-            yield approach
+            #map(func, iter) will be used to filter out the approaches for CloseApproach objects.
+            flag = False in map(lambda i: i(approach), filters)
+            if flag == False:
+                yield approach

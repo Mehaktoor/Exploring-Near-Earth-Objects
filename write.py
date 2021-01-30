@@ -13,6 +13,13 @@ You'll edit this file in Part 4.
 import csv
 import json
 
+"""
+A function to merge two dictionaries into one. We'll use this for merging the approachesDict with
+the neosDict
+"""
+def merge(dict1, dict2):
+    temp = {**dict1, **dict2}
+    return temp
 
 def write_to_csv(results, filename):
     """Write an iterable of `CloseApproach` objects to a CSV file.
@@ -26,7 +33,16 @@ def write_to_csv(results, filename):
     """
     fieldnames = ('datetime_utc', 'distance_au', 'velocity_km_s', 'designation', 'name', 'diameter_km', 'potentially_hazardous')
     # TODO: Write the results to a CSV file, following the specification in the instructions.
-
+    
+    with open(csvFilename, 'w') as outfile:
+        writer = csv.DictWriter(outfile, fieldnames = fieldnames)
+        writer.writerheader()
+        for i in results:
+            approachesDict = i.serialize()
+            neosDict = i.neo.serialize()
+            csvDict = merge(approachesDict, neosDict)
+            csvDict.pop('neo')
+            writer.writerow(csvDict)
 
 def write_to_json(results, filename):
     """Write an iterable of `CloseApproach` objects to a JSON file.
@@ -40,3 +56,6 @@ def write_to_json(results, filename):
     :param filename: A Path-like object pointing to where the data should be saved.
     """
     # TODO: Write the results to a JSON file, following the specification in the instructions.
+    outFile = [approach.serialize() for approach in results]
+    with open(jsonFilename, 'w') as outfile:
+        json.dump(outFile, outfile, indent = 2)
