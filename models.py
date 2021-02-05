@@ -59,14 +59,14 @@ class NearEarthObject:
     def fullname(self):
         """Return a representation of the full name of this NEO."""
         # TODO: Use self.designation and self.name to build a fullname for this object.
-        return f"{self.designation} ({self.name})" if (isinstance(self.name, str) and self.name != None) else f"{self.designation}"
+        return f"{self.designation} ({self.name})" if (isinstance(self.name, str) and self.name != '') else f"{self.designation}"
 
     def __str__(self):
         """Return `str(self)`."""
         # TODO: Use this object's attributes to return a human-readable string representation.
         # The project instructions include one possibility. Peek at the __repr__
         # method for examples of advanced string formatting.
-        return f'A NearEarthObject {self.fullname} has a diameter of {self.diameter: .3f} km and is {""if self.hazardous else "is not "} potentially hazardous.'
+        return f'A NearEarthObject {self.fullname} has a diameter of {self.diameter:.3f} km and is {""if self.hazardous else "is not "} potentially hazardous.'
 
     def __repr__(self):
         """Return `repr(self)`, a computer-readable string representation of this object."""
@@ -134,7 +134,7 @@ class CloseApproach:
         # TODO: Use this object's attributes to return a human-readable string representation.
         # The project instructions include one possibility. Peek at the __repr__
         # method for examples of advanced string formatting.
-        return f"On {self.time_str}, {fullname} approaches Earth at a distance of {self.diameter:.2f} au and a velocity of {self.velocity:.2f} km/s."
+        return f"On {self.time_str}, {self.neo} approaches Earth at a distance of {self.distance:.2f} au and a velocity of {self.velocity:.2f} km/s."
 
     def __repr__(self):
         """Return `repr(self)`, a computer-readable string representation of this object."""
@@ -144,4 +144,4 @@ class CloseApproach:
     
     def measured(self):
         """Returns the measured dictionary data into the json or csv file"""
-        return{'datetime': datetime_to_str(self.time), 'datetime_au' : self.distance, 'velocity' : self.velocity, 'neo' : self.neo.measured()}
+        return{'datetime': datetime_to_str(self.time), 'distance_au' : self.distance, 'velocity' : self.velocity, 'neo' : self.neo.measured()}

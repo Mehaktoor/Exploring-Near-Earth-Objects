@@ -17,7 +17,7 @@ iterator.
 You'll edit this file in Tasks 3a and 3c.
 """
 import operator
-
+import itertools
 
 class UnsupportedCriterionError(NotImplementedError):
     """A filter criterion is unsupported."""
@@ -180,13 +180,9 @@ def limit(iterator, n=None):
     :yield: The first (at most) `n` values from the iterator.
     """
     # TODO: Produce at most `n` values from the given iterator.
-    if n == 0 and n == None:
-        return [approach for approach in iterator]
-    else:
-        approaches = []
-        for index, approach in enumerate(iterator):
-            if index > n:
-                break
-            approaches.append(approach)
-        return approaches
+        #return approach
+    if n == 0:
+        n = None
+    return itertools.islice(iterator, n)
+    
  
