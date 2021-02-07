@@ -19,9 +19,11 @@ This is our helper function for linking which we will use for the other function
 """
 def link_neos_and_approaches(neos, approaches):
     neosList = {}           #for the neos list
-    approachesList = []     #for the approaches list
+    approachesList = []    #for the approaches list
     #every close approach has attributes with designation and so does every neo. 
-    # We'll check if they match,     #then it will be linked. Also, it will searched as well in the list we are making. If it is already         #there, the approach will be appended to the neosList in the approches. Else, it will be given with a       #new neo. 
+    # We'll check if they match, then it will be linked. Also, it will searched as well in the 
+    # list we are making. If it is already there, the approach will be appended to the
+    # neosList in the approches. Else, it will be given with a new neo. 
     for approach in approaches:
         for neo in neos:
             if neo.designation == approach._designation:       

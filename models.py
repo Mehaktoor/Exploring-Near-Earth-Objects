@@ -76,7 +76,7 @@ class NearEarthObject:
     def measured(self):
         """ Returns the measured dictionary in json and csv file"""
         name = self.name if self.name != None else ' '
-        return {'designation': self.designation, 'name' : name, 'diameter': self.diameter, 'potentially_hazardous': self.hazardous}
+        return {'designation': self.designation, 'name' : name, 'diameter_km': self.diameter, 'potentially_hazardous': self.hazardous}
 
 
 class CloseApproach:
@@ -144,4 +144,4 @@ class CloseApproach:
     
     def measured(self):
         """Returns the measured dictionary data into the json or csv file"""
-        return{'datetime': datetime_to_str(self.time), 'distance_au' : self.distance, 'velocity' : self.velocity, 'neo' : self.neo.measured()}
+        return{'datetime_utc': datetime_to_str(self.time), 'distance_au' : self.distance, 'velocity_km_s' : self.velocity, 'neo' : self.neo.measured()}
