@@ -47,7 +47,9 @@ class NearEarthObject:
         self.designation = pdesignation
         self.name = name
         self.diameter = diameter
-        if(hazardous == 'Y' or 'y'):
+        if(hazardous == 'Y'):
+            self.hazardous = True
+        elif(hazardous == 'y'):
             self.hazardous = True
         else:
             self.hazardous = False
